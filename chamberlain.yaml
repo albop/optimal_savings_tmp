@@ -1,0 +1,45 @@
+symbols:
+
+    states: [m]
+    controls: [c]
+    auxiliaries: [a]
+    shocks: [e_y, e_r]
+    parameters: [beta,gamma,sigma_y,sigma_r,delta_r,r,y]
+
+equations:
+
+    transition:
+        - m = exp(e_y) + (m(-1)-c(-1))*r*exp(e_r)
+
+    arbitrage:
+        - 1 = beta*(c(1)/c)^(-gamma)*r  |   0 <= c <= m
+
+    auxiliary:
+        - a = m-c
+
+
+calibration:
+
+    beta: 0.96
+    gamma: 4.0
+    delta_r: 0.01
+    r: 1/beta - delta_r
+    c: y
+    y: 1
+    m: 1.0
+    a: m-c
+    sigma_y: 0.01
+    sigma_r: 0.01
+
+distribution:
+    Normal:
+        - [
+        [sigma_y, 0],
+        [0, sigma_r]
+    ]
+    # idea: add option to truncate
+options:
+    approximation_space:
+        a: [0.0]
+        b: [10.0]
+        orders: [20]

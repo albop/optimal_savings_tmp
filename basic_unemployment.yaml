@@ -1,0 +1,50 @@
+symbols:
+  markov_states: [y]
+  states: [m]
+  controls: [c]
+  auxiliaries: [a]
+  parameters: [β, γ, μ, r, delta_r]
+
+equations:
+
+  transition:
+
+    - m = y + (m(-1)-c(-1))*r
+
+  arbitrage:
+
+    - 1 = (c(1)/c)^(-γ)*(β*r)   |    0 <= c <= m
+
+  auxiliary:
+  
+    - a = m-c
+
+discrete_transition:
+
+  MarkovChain:
+    - [ [ 1  ],
+        [ 1-mu ] ]
+    - [ [  1-u       ,  u ],
+        [  0        ,   1  ]]
+
+
+calibration:
+
+  β: 0.95
+  r: 1/β - delta_r
+  delta_r: 0.01
+  γ: 4
+  mu: 0.1
+  u: 0.1
+
+  y: 1.0
+  m: 0.5
+  c: y
+  a: m-c
+
+options:
+
+  approximation_space:
+    a: [0.0]
+    b: [10]
+    orders: [100]
